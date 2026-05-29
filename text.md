@@ -40,6 +40,6 @@ Depa is raising its seed round to scale from PSP tarction into the operating cor
 
 Use of proceeds
 
-- Grow the team from 15 to 45 over the next 24 months
+- Grow the team from 15 to 45 over the next 18 months
 - Strengthen our capital and treasury position to support regulatory expansion
 - Build enterprise-grade capabilities for PSPs today and banks tomorrow
