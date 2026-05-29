@@ -1,5 +1,6 @@
 1. Depa 
-"The treasury-native OS for regulated, multi-asset money businesses _One ledger — fiat and stablecoin — for payments, treasury, and risk"
+"The treasury-native OS for regulated, multi-asset money businesses 
+One ledger — fiat and stablecoin — for payments, treasury, and risk"
 
 2. How are we different from the other 120 Stablecoin companies?
 Depa is what you'd get if BVNK and Formance had a baby
