@@ -179,16 +179,17 @@
     <script type="module">
       const list = document.getElementById("versions");
 
-      try {
-        const versions = await fetch("/api/versions").then((r) => r.json());
-
-        if (versions.length === 0) {
-          list.innerHTML = `
-            <li class="empty">
-              No versions yet. Add a <code>name.html</code> file next to
-              <code>index.html</code> and refresh.
-            </li>`;
-        } else {
+      fetch("/versions.json")
+        .then((r) => r.json())
+        .then((versions) => {
+          if (versions.length === 0) {
+            list.innerHTML = `
+              <li class="empty">
+                No versions yet. Add a <code>name.html</code> file next to
+                <code>index.html</code> and refresh.
+              </li>`;
+            return;
+          }
           list.innerHTML = versions
             .map(
               (v) => `
@@ -203,13 +204,13 @@
               </li>`
             )
             .join("");
-        }
-      } catch {
-        list.innerHTML = `
-          <li class="empty">
-            Could not load versions. Run <code>npm run dev</code> to start the server.
-          </li>`;
-      }
+        })
+        .catch(() => {
+          list.innerHTML = `
+            <li class="empty">
+              Could not load versions. Run <code>npm run dev</code> to start the server.
+            </li>`;
+        });
     </script>
   </body>
 </html>

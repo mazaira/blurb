@@ -1,2 +1,4 @@
 node_modules/
 dist/
+public/versions.json
+public/text.md

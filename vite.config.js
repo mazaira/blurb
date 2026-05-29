@@ -35,42 +35,45 @@ function formatLabel(id) {
     .join(" ");
 }
 
+const PUBLIC = path.join(ROOT, "public");
+
+function writeManifest() {
+  fs.mkdirSync(PUBLIC, { recursive: true });
+  fs.writeFileSync(
+    path.join(PUBLIC, "versions.json"),
+    JSON.stringify(listVersions(), null, 2)
+  );
+  const textSrc = path.join(ROOT, "text.md");
+  if (fs.existsSync(textSrc)) {
+    fs.copyFileSync(textSrc, path.join(PUBLIC, "text.md"));
+  }
+}
+
+function versionRouteMiddleware() {
+  return (req, _res, next) => {
+    const match = req.url?.match(/^\/v\/([^/?#]+)\/?$/);
+    if (!match) return next();
+
+    const file = `${match[1]}.html`;
+    if (fs.existsSync(path.join(ROOT, file))) {
+      req.url = `/${file}`;
+    }
+    next();
+  };
+}
+
 function versionsPlugin() {
   return {
     name: "blurb-versions",
+    buildStart() {
+      writeManifest();
+    },
     configureServer(server) {
-      server.middlewares.use("/api/versions", (_req, res) => {
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify(listVersions()));
-      });
-
-      server.middlewares.use((req, _res, next) => {
-        const match = req.url?.match(/^\/v\/([^/?#]+)\/?$/);
-        if (!match) return next();
-
-        const file = `${match[1]}.html`;
-        if (fs.existsSync(path.join(ROOT, file))) {
-          req.url = `/${file}`;
-        }
-        next();
-      });
+      writeManifest();
+      server.middlewares.use(versionRouteMiddleware());
     },
     configurePreviewServer(server) {
-      server.middlewares.use("/api/versions", (_req, res) => {
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify(listVersions()));
-      });
-
-      server.middlewares.use((req, _res, next) => {
-        const match = req.url?.match(/^\/v\/([^/?#]+)\/?$/);
-        if (!match) return next();
-
-        const file = `${match[1]}.html`;
-        if (fs.existsSync(path.join(ROOT, file))) {
-          req.url = `/${file}`;
-        }
-        next();
-      });
+      server.middlewares.use(versionRouteMiddleware());
     },
   };
 }

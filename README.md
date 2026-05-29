@@ -24,6 +24,15 @@ Opens [http://localhost:5173](http://localhost:5173) with a version picker. Each
 | `npm run build` | Static build to `dist/`              |
 | `npm run preview` | Serve the production build locally |
 
+## Deploy to Vercel
+
+Import the repo (or `vercel` CLI from this folder). Vercel detects Vite automatically:
+
+- **Build command:** `npm run build`
+- **Output directory:** `dist`
+
+`vercel.json` rewrites `/v/:id` to `/:id.html` in production. The version list is generated as `public/versions.json` at build time.
+
 ## Files
 
 - `text.md` — source copy
