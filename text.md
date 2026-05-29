@@ -75,3 +75,13 @@ Depa is raising its **seed round** to scale from PSP traction into the operating
 - Grow the team from **15 to 45** over the next 18 months
 - Strengthen our **capital and treasury position** to support regulatory expansion
 - Build enterprise-grade capabilities for PSPs today and banks tomorrow
+
+---
+
+## 7. Thank you
+
+**Let's talk.**
+
+Questions on Depa or the seed round? We'd love to hear from you.
+
+[mazaira@depa.finance](mailto:mazaira@depa.finance)

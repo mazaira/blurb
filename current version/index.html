@@ -355,6 +355,49 @@
         }
       }
 
+      .closing {
+        text-align: center;
+        background:
+          radial-gradient(circle at 20% 80%, rgba(35, 180, 125, 0.12), transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(46, 208, 255, 0.08), transparent 45%),
+          var(--background);
+      }
+
+      .closing .inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .closing h2 {
+        max-width: none;
+        margin-bottom: 16px;
+      }
+
+      .closing .lead {
+        max-width: 36ch;
+        color: var(--muted-foreground);
+        margin-bottom: 28px;
+      }
+
+      .closing .email {
+        font-family: var(--font-display);
+        font-size: clamp(18px, 4vw, 22px);
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+        padding: 14px 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+
+      .closing .email:hover {
+        border-color: var(--primary);
+        box-shadow: 0 8px 32px rgba(35, 180, 125, 0.12);
+      }
+
       .team p {
         margin-bottom: 20px;
       }
@@ -384,7 +427,12 @@
   <body>
     <header class="topbar" aria-label="Deck header">
       <div class="topbar-inner">
-        <a class="brand" href="/">
+        <a
+          class="brand"
+          href="https://depa.finance/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <img src="/assets/depa-logo.svg" alt="Depa" width="30" height="30" />
           <span>Depa</span>
         </a>
@@ -502,14 +550,14 @@
           <h2>Built by regulated financial infrastructure operators</h2>
           <p>
             <strong>Alberto — CEO</strong><br />
-            Formerly Spanish Stock Exchange, BMW, and Fidor Bank. Built core banking and
+            Formerly Spanish Stock Exchange (BME), BMW, and Fidor Bank. Built core banking and
             market infrastructure for major exchanges over the last decade.
           </p>
           <p>
             <strong>Pere — CFO</strong><br />
-            25+ years in finance leadership. Former Group Head of Finance at BVNK and
-            Ebury, across fintech, payments, treasury, and scaling regulated financial
-            operations.
+            Former Group Head of Finance at BVNK and
+            Ebury. He brings +25 years of experience across fintech, 
+            payments, treasury, and scaling regulated financial operations.
           </p>
           <p>
             <strong>Michael — COO</strong><br />
@@ -524,8 +572,8 @@
           <span class="eyebrow">Round</span>
           <h2>Seed round</h2>
           <p>
-            Depa is raising its seed round to scale from PSP tarction into the operating
-            core for regulated money businesses.
+            Depa is raising its seed round to scale from PSP traction into the operating
+            core for regulated money institutions.
           </p>
           <p><strong>Use of proceeds</strong></p>
           <ul>
@@ -537,6 +585,15 @@
               Build enterprise-grade capabilities for PSPs today and banks tomorrow
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section id="thanks" class="closing">
+        <div class="inner">
+          <span class="eyebrow">Thank you</span>
+          <h2>Let's talk.</h2>
+          <p class="lead">Questions on Depa or the seed round? Please drop us a line.</p>
+          <a class="email" href="mailto:mazaira@depa.finance">mazaira@depa.finance</a>
         </div>
       </section>
     </div>

@@ -151,6 +151,30 @@
           grid-template-columns: repeat(3, 1fr);
         }
       }
+      .closing {
+        text-align: center;
+      }
+      .closing .inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .closing .lead {
+        max-width: 36ch;
+        color: var(--muted);
+        margin-bottom: 28px;
+      }
+      .closing .email {
+        font-family: var(--display);
+        font-size: clamp(18px, 4vw, 22px);
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+        padding: 14px 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+      }
       .lead {
         font-size: clamp(17px, 4vw, 22px);
         line-height: 1.5;
@@ -337,6 +361,16 @@
               Build enterprise-grade capabilities for PSPs today and banks tomorrow
             </li>
           </ul>
+        </div>
+      </section>
+
+      <!-- 7. Thank you -->
+      <section id="thanks" class="closing">
+        <div class="inner">
+          <p class="eyebrow">Thank you</p>
+          <h2>Let's talk.</h2>
+          <p class="lead">Questions on Depa or the seed round? We'd love to hear from you.</p>
+          <a class="email" href="mailto:mazaira@depa.finance">mazaira@depa.finance</a>
         </div>
       </section>
     </div>
