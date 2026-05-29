@@ -40,7 +40,7 @@ Most infrastructure was built around transactions. The next generation of regula
 - Grew from **$600k** revenue in 2024 to **$5.2M** in 2025
 - **$2M+** revenue in 2026 YTD, with customer concentration solved
 - Signing new contracts at **3×** the 2025 pace
-- **$750k+** revenue per employee
+- **$750k+** ARR per employee
 - Processing **15k+ payments/day** with a team of 13
 - **0.02%** chargeback rate
 
