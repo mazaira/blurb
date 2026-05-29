@@ -76,6 +76,7 @@ function listBuildInputs() {
   const inputs = [
     { key: "main", file: "index.html" },
     { key: "compare", file: "compare.html" },
+    { key: "source", file: "source.html" },
   ];
   const current = getCurrentVersion();
   if (current) inputs.push({ key: "current", file: current.file });

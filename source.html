@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depa — Source copy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: rgb(245, 246, 252);
+        --fg: rgb(20, 20, 26);
+        --card: rgb(255, 255, 255);
+        --primary: rgb(35, 180, 125);
+        --accent: rgb(46, 208, 255);
+        --muted: rgb(122, 122, 122);
+        --border: rgb(228, 228, 228);
+        --display: "Space Grotesk", sans-serif;
+        --body: "Inter", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--body);
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .toolbar a {
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .toolbar a:hover {
+        color: var(--primary);
+      }
+
+      .toolbar-title {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 14px;
+        flex: 1;
+      }
+
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+      }
+
+      .prose {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 40px 36px;
+        box-shadow: 0 12px 40px rgba(20, 20, 26, 0.06);
+      }
+
+      .prose :is(h1, h2, h3) {
+        font-family: var(--display);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--fg);
+      }
+
+      .prose h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .prose h2 {
+        font-size: 1.35rem;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .prose h2:first-of-type {
+        margin-top: 1.25rem;
+        padding-top: 0;
+        border-top: none;
+      }
+
+      .prose h3 {
+        font-size: 1.05rem;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+      }
+
+      .prose p {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+
+      .prose blockquote {
+        margin: 1rem 0 1.25rem;
+        padding: 1rem 1.25rem;
+        border-left: 4px solid var(--primary);
+        background: linear-gradient(
+          90deg,
+          rgba(35, 180, 125, 0.08),
+          transparent
+        );
+        border-radius: 0 12px 12px 0;
+        color: var(--fg);
+      }
+
+      .prose blockquote p {
+        margin-bottom: 0.35rem;
+      }
+
+      .prose blockquote p:last-child {
+        margin-bottom: 0;
+      }
+
+      .prose ul {
+        margin: 0 0 1.25rem 1.25rem;
+      }
+
+      .prose li {
+        margin-bottom: 0.5rem;
+      }
+
+      .prose strong {
+        font-weight: 600;
+        color: var(--fg);
+      }
+
+      .prose em {
+        color: var(--muted);
+      }
+
+      .prose hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 1.75rem 0;
+      }
+
+      .prose a {
+        color: var(--primary);
+      }
+
+      .prose code {
+        font-size: 0.9em;
+        background: var(--bg);
+        padding: 0.15em 0.4em;
+        border-radius: 4px;
+      }
+
+      .loading,
+      .error {
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="toolbar">
+      <a href="/">← Menu</a>
+      <span class="toolbar-title">Source copy</span>
+      <a href="/text.md" download>Raw .md</a>
+    </header>
+
+    <div class="wrap">
+      <article class="prose" id="content">
+        <p class="loading">Loading…</p>
+      </article>
+    </div>
+
+    <script type="module">
+      const content = document.getElementById("content");
+
+      const renderer = {
+        heading({ depth, text }) {
+          return `<h${depth}>${text}</h${depth}>`;
+        },
+        paragraph(text) {
+          return `<p>${text}</p>`;
+        },
+        blockquote(text) {
+          return `<blockquote>${text}</blockquote>`;
+        },
+        list(body, ordered) {
+          const tag = ordered ? "ol" : "ul";
+          return `<${tag}>${body}</${tag}>`;
+        },
+        listitem(text) {
+          return `<li>${text}</li>`;
+        },
+        strong(text) {
+          return `<strong>${text}</strong>`;
+        },
+        em(text) {
+          return `<em>${text}</em>`;
+        },
+        codespan(text) {
+          return `<code>${text}</code>`;
+        },
+        hr() {
+          return "<hr />";
+        },
+        link(href, title, text) {
+          const t = title ? ` title="${title}"` : "";
+          return `<a href="${href}"${t}>${text}</a>`;
+        },
+      };
+
+      async function loadMarked() {
+        const { marked } = await import(
+          "https://cdn.jsdelivr.net/npm/marked@15.0.7/lib/marked.esm.js"
+        );
+        marked.use({ renderer, gfm: true, breaks: true });
+        return marked;
+      }
+
+      fetch("/text.md")
+        .then((r) => {
+          if (!r.ok) throw new Error("Not found");
+          return r.text();
+        })
+        .then(async (md) => {
+          const marked = await loadMarked();
+          content.innerHTML = marked.parse(md);
+        })
+        .catch(() => {
+          content.innerHTML =
+            '<p class="error">Could not load <code>text.md</code>.</p>';
+        });
+    </script>
+  </body>
+</html>

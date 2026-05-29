@@ -18,7 +18,8 @@ Opens [http://localhost:5173](http://localhost:5173) with a version picker.
 | `assets/` | Logo and shared images → served at `/assets/` |
 | `One shot tries/` | First-pass AI deck variants |
 | `current version/` | Active deck (`index.html`) + `template.html` |
-| `text.md` | Source copy (project root) |
+| `text.md` | Source copy (project root, Markdown) |
+| `source.html` | Rendered view of `text.md` at `/source.html` |
 | `compare.html` | Side-by-side view of all one-shot decks |
 
 Routes:
