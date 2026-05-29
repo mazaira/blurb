@@ -49,7 +49,7 @@ function getCurrentVersion() {
   const filePath = path.join(ROOT, CURRENT_DIR, CURRENT_FILE);
   if (!fs.existsSync(filePath)) return null;
   return {
-    path: "/v/current",
+    path: "/",
     file: path.join(CURRENT_DIR, CURRENT_FILE),
   };
 }
@@ -59,7 +59,8 @@ function buildManifest() {
   return {
     current: current
       ? { path: current.path, available: true, title: "Current version" }
-      : { path: "/v/current", available: false, title: "Current version" },
+      : { path: "/", available: false, title: "Current version" },
+    menu: { path: "/menu" },
     compare: {
       path: "/compare.html",
       title: "Compare one-shots",
@@ -74,7 +75,7 @@ function buildManifest() {
 /** All HTML entry points for Vite build */
 function listBuildInputs() {
   const inputs = [
-    { key: "main", file: "index.html" },
+    { key: "menu", file: "menu.html" },
     { key: "compare", file: "compare.html" },
     { key: "source", file: "source.html" },
   ];
@@ -137,22 +138,35 @@ function resolveVersionFile(collectionSlug, id) {
   return null;
 }
 
-function versionRouteMiddleware() {
+function routeMiddleware() {
   return (req, _res, next) => {
-    if (req.url?.match(/^\/v\/current\/?$/)) {
+    const [pathname, query] = (req.url ?? "").split("?");
+    const qs = query ? `?${query}` : "";
+
+    if (pathname === "/" || pathname === "") {
       const file = path.join(CURRENT_DIR, CURRENT_FILE);
       if (fs.existsSync(path.join(ROOT, file))) {
-        req.url = `/${file.split(path.sep).join("/")}`;
+        req.url = `/${file.split(path.sep).join("/")}${qs}`;
       }
       return next();
     }
 
-    const match = req.url?.match(/^\/v\/([^/]+)\/([^/?#]+)\/?$/);
+    if (pathname === "/menu" || pathname === "/menu/") {
+      req.url = `/menu.html${qs}`;
+      return next();
+    }
+
+    if (pathname === "/v/current" || pathname === "/v/current/") {
+      req.url = `/${path.join(CURRENT_DIR, CURRENT_FILE).split(path.sep).join("/")}${qs}`;
+      return next();
+    }
+
+    const match = pathname.match(/^\/v\/([^/]+)\/([^/]+)\/?$/);
     if (!match) return next();
 
     const relativeFile = resolveVersionFile(match[1], match[2]);
     if (relativeFile) {
-      req.url = `/${relativeFile.split(path.sep).join("/")}`;
+      req.url = `/${relativeFile.split(path.sep).join("/")}${qs}`;
     }
     next();
   };
@@ -166,10 +180,17 @@ function versionsPlugin() {
     },
     configureServer(server) {
       writeManifest();
-      server.middlewares.use(versionRouteMiddleware());
+      server.middlewares.use(routeMiddleware());
     },
     configurePreviewServer(server) {
-      server.middlewares.use(versionRouteMiddleware());
+      server.middlewares.use(routeMiddleware());
+    },
+    closeBundle() {
+      const built = path.join(ROOT, "dist", CURRENT_DIR, CURRENT_FILE);
+      const dest = path.join(ROOT, "dist", "index.html");
+      if (fs.existsSync(built)) {
+        fs.copyFileSync(built, dest);
+      }
     },
   };
 }

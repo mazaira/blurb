@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Opens [http://localhost:5173](http://localhost:5173) with a version picker.
+Opens [http://localhost:5173](http://localhost:5173) on the **current deck**. The version picker is at [/menu](http://localhost:5173/menu).
 
 ## Folder layout
 
@@ -21,17 +21,20 @@ Opens [http://localhost:5173](http://localhost:5173) with a version picker.
 | `text.md` | Source copy (project root, Markdown) |
 | `source.html` | Rendered view of `text.md` at `/source.html` |
 | `compare.html` | Side-by-side view of all one-shot decks |
+| `menu.html` | Version picker and links |
 
 Routes:
 
+- `/` → `current version/index.html` (default)
+- `/menu` → version picker
 - `/v/one-shot/opus` → `One shot tries/opus.html`
-- `/v/current` → `current version/index.html`
+- `/v/current` → redirects to `/` (legacy)
 - `/compare.html` → four one-shots side by side
 
 ## Adding a version
 
 1. Add `your-version.html` under `One shot tries/` or `current version/`.
-2. It shows up on the home page automatically — no config change needed.
+2. It shows up on `/menu` automatically — no config change needed.
 
 ## Logo
 
@@ -52,7 +55,7 @@ Import the repo (or `vercel` CLI from this folder). Vercel detects Vite automati
 - **Build command:** `npm run build`
 - **Output directory:** `dist`
 
-`vercel.json` rewrites `/v/one-shot/:id` and `/v/current/:id` in production. The version list is generated as `public/versions.json` at build time.
+`vercel.json` rewrites `/` to the current deck and `/menu` to the picker. The version list is generated as `public/versions.json` at build time.
 
 ## Files
 
