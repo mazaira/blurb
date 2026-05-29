@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depa — Seed Blurb Versions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: rgb(245, 246, 252);
+        --fg: rgb(20, 20, 26);
+        --card: rgb(255, 255, 255);
+        --primary: rgb(35, 180, 125);
+        --muted: rgb(122, 122, 122);
+        --border: rgb(228, 228, 228);
+        --display: "Space Grotesk", sans-serif;
+        --body: "Inter", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--body);
+        background: var(--bg);
+        color: var(--fg);
+        min-height: 100dvh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+      }
+
+      header {
+        margin-bottom: 40px;
+      }
+
+      .logo {
+        font-family: var(--display);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        font-family: var(--display);
+        font-size: clamp(28px, 5vw, 36px);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .section-label {
+        font-family: var(--display);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      a.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+
+      a.card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 8px 32px rgba(35, 180, 125, 0.12);
+      }
+
+      .card-title {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .card-path {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+        font-family: ui-monospace, monospace;
+      }
+
+      .arrow {
+        color: var(--primary);
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .empty {
+        padding: 24px;
+        border: 1px dashed var(--border);
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .empty code {
+        font-size: 13px;
+        background: var(--card);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      footer {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      footer a {
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="logo">Depa</p>
+        <h1>Seed round blurb versions</h1>
+        <p class="subtitle">
+          Pick a deck variant to preview. Edits to any <code>.html</code> file reload
+          instantly in the browser.
+        </p>
+      </header>
+
+      <p class="section-label">Versions</p>
+      <ul id="versions"></ul>
+
+      <footer>
+        Source copy in <a href="/text.md">text.md</a>. Add a new
+        <code>your-version.html</code> in this folder — it appears here automatically.
+      </footer>
+    </div>
+
+    <script type="module">
+      const list = document.getElementById("versions");
+
+      try {
+        const versions = await fetch("/api/versions").then((r) => r.json());
+
+        if (versions.length === 0) {
+          list.innerHTML = `
+            <li class="empty">
+              No versions yet. Add a <code>name.html</code> file next to
+              <code>index.html</code> and refresh.
+            </li>`;
+        } else {
+          list.innerHTML = versions
+            .map(
+              (v) => `
+              <li>
+                <a class="card" href="${v.path}">
+                  <div>
+                    <div class="card-title">${v.label}</div>
+                    <div class="card-path">${v.path}</div>
+                  </div>
+                  <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              </li>`
+            )
+            .join("");
+        }
+      } catch {
+        list.innerHTML = `
+          <li class="empty">
+            Could not load versions. Run <code>npm run dev</code> to start the server.
+          </li>`;
+      }
+    </script>
+  </body>
+</html>

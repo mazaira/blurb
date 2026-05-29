@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depa — Seed Round · Qwen 3.7 Max</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: rgb(245, 246, 252);
+      --fg: rgb(20, 20, 26);
+      --card: rgb(255, 255, 255);
+      --card-fg: rgb(20, 20, 26);
+      --primary: rgb(35, 180, 125);
+      --primary-fg: rgb(255, 255, 255);
+      --secondary: rgb(158, 245, 195);
+      --secondary-fg: rgb(20, 20, 26);
+      --muted: rgb(240, 242, 248);
+      --muted-fg: rgb(122, 122, 122);
+      --accent: rgb(35, 180, 125);
+      --destructive: rgb(233, 46, 74);
+      --border: rgb(228, 228, 228);
+      --chart-1: rgb(46, 208, 255);
+      --chart-2: rgb(243, 206, 58);
+      --chart-3: rgb(255, 112, 34);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    .serif {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-weight: 400;
+    }
+
+    .serif-italic {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    /* ── Sections ── */
+    section {
+      min-height: 100vh;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Reveal animation ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    /* ── Navigation Dots ── */
+    .nav-dots {
+      position: fixed;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .nav-dot.active {
+      background: var(--primary);
+      transform: scale(1.4);
+    }
+
+    /* ── Slide 1: Hero ── */
+    .hero {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(35,180,125,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo-placeholder {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 2rem;
+      border-radius: 16px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-fg);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title .accent {
+      color: var(--primary);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--muted-fg);
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.5;
+    }
+
+    .hero-tagline {
+      display: inline-block;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-weight: 500;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      border-radius: 100px;
+      color: var(--fg);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-tagline .green {
+      color: var(--primary);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted-fg);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bobble 2s ease-in-out infinite;
+    }
+
+    .scroll-hint svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--muted-fg);
+    }
+
+    @keyframes bobble {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── Slide 2: How Different ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-heading {
+      font-size: clamp(1.75rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+    }
+
+    .comparison-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-header {
+      background: var(--muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .comparison-cell {
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .comparison-cell:first-child {
+      border-right: 1px solid var(--border);
+      color: var(--muted-fg);
+    }
+
+    .comparison-cell.highlight {
+      background: rgba(35, 180, 125, 0.04);
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .comparison-header:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .different-text {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      line-height: 1.7;
+      color: var(--fg);
+      margin-top: 1.75rem;
+    }
+
+    .different-text strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .baby-line {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+      color: var(--fg);
+      margin-bottom: 2rem;
+      line-height: 1.4;
+    }
+
+    .baby-line .company {
+      color: var(--primary);
+      font-style: normal;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    /* ── Slide 3: Why Now ── */
+    .why-now-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .flow-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .flow-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--secondary);
+      color: var(--secondary-fg);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--fg);
+    }
+
+    .flow-text .dim {
+      color: var(--muted-fg);
+    }
+
+    .big-quote {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+      line-height: 1.4;
+      margin-top: 2rem;
+      padding-left: 1.25rem;
+      border-left: 3px solid var(--primary);
+      color: var(--fg);
+    }
+
+    /* ── Slide 4: Traction ── */
+    .traction-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .traction-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .traction-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .traction-card:nth-child(2)::after { background: var(--chart-1); }
+    .traction-card:nth-child(3)::after { background: var(--chart-2); }
+    .traction-card:nth-child(4)::after { background: var(--chart-3); }
+    .traction-card:nth-child(5)::after { background: var(--primary); }
+    .traction-card:nth-child(6)::after { background: var(--secondary); }
+
+    .traction-value {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    .traction-value .unit {
+      font-size: 0.5em;
+      font-weight: 500;
+      color: var(--muted-fg);
+      margin-left: 0.1em;
+    }
+
+    .traction-label {
+      font-size: 0.85rem;
+      color: var(--muted-fg);
+      line-height: 1.4;
+    }
+
+    /* ── Slide 5: Team ── */
+    .team-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+
+    .team-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .team-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .team-role {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    .team-bio {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted-fg);
+    }
+
+    /* ── Slide 6: Round ── */
+    .round-section {
+      text-align: center;
+    }
+
+    .round-heading {
+      font-size: clamp(1.75rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .round-subtext {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: var(--muted-fg);
+      max-width: 550px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .proceeds-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .proceed-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .proceed-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .proceed-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--primary);
+    }
+
+    .proceed-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      min-height: auto;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      scroll-snap-align: end;
+    }
+
+    .footer-content {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-text {
+      font-size: 0.85rem;
+      color: var(--muted-fg);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: var(--primary-fg);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(35, 180, 125, 0.3);
+    }
+
+    .confidential {
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: var(--border);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Responsive ── */
+    @media (min-width: 640px) {
+      section {
+        padding: 4rem 2.5rem;
+      }
+
+      .traction-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-dots {
+        right: 1.5rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      section {
+        padding: 5rem 3rem;
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .proceeds-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        max-width: 900px;
+        text-align: center;
+      }
+
+      .proceed-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .comparison-cell {
+        padding: 1.25rem 1.75rem;
+        font-size: 1rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      section {
+        padding: 5rem 4rem;
+      }
+
+      .traction-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .nav-dots {
+        right: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav Dots -->
+  <nav class="nav-dots" aria-label="Slide navigation">
+    <button class="nav-dot active" data-target="hero" aria-label="Go to slide 1"></button>
+    <button class="nav-dot" data-target="different" aria-label="Go to slide 2"></button>
+    <button class="nav-dot" data-target="whynow" aria-label="Go to slide 3"></button>
+    <button class="nav-dot" data-target="traction" aria-label="Go to slide 4"></button>
+    <button class="nav-dot" data-target="team" aria-label="Go to slide 5"></button>
+    <button class="nav-dot" data-target="round" aria-label="Go to slide 6"></button>
+  </nav>
+
+  <!-- ═══════════ SLIDE 1: HERO ═══════════ -->
+  <section class="hero" id="hero">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="logo-placeholder">D</div>
+      </div>
+      <h1 class="hero-title reveal reveal-delay-1">
+        <span class="accent">Depa</span>
+      </h1>
+      <p class="hero-subtitle reveal reveal-delay-2">
+        The treasury-native OS for regulated, multi-asset money businesses
+      </p>
+      <div class="reveal reveal-delay-3">
+        <span class="hero-tagline">
+          One ledger — <span class="green">fiat</span> and <span class="green">stablecoin</span> — for payments, treasury, and risk
+        </span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════ SLIDE 2: HOW DIFFERENT ═══════════ -->
+  <section id="different">
+    <div class="section-inner">
+      <div class="section-label reveal">How are we different</div>
+      <h2 class="section-heading reveal reveal-delay-1">
+        How are we different from the other <span class="serif-italic">120</span> stablecoin companies?
+      </h2>
+      <p class="baby-line reveal reveal-delay-2">
+        Depa is what you'd get if <span class="company">BVNK</span> and <span class="company">Formance</span> had a baby
+      </p>
+
+      <div class="comparison-card reveal reveal-delay-3">
+        <div class="comparison-row comparison-header">
+          <div class="comparison-cell">Onrampers, Bridge, Noah's…</div>
+          <div class="comparison-cell">Depa</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-cell">Product centers on the <strong>transaction</strong>: money in, money out</div>
+          <div class="comparison-cell highlight">Begins at the <strong>account</strong>. Every payment settles against a live treasury position on one ledger</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-cell">Reconciliation, segregation, counterparty risk are <strong>features</strong></div>
+          <div class="comparison-cell highlight">Reconciliation, segregation, nostro/vostro and counterparty risk are the <strong>substrate</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SLIDE 3: WHY NOW ═══════════ -->
+  <section id="whynow">
+    <div class="section-inner">
+      <div class="section-label reveal">Why now?</div>
+      <h2 class="section-heading reveal reveal-delay-1">
+        Stablecoins are moving into <span class="serif-italic">regulated financial infrastructure</span>
+      </h2>
+
+      <div class="why-now-flow">
+        <div class="flow-item reveal reveal-delay-2">
+          <div class="flow-number">1</div>
+          <div class="flow-text">
+            As PSPs and banks adopt stablecoins, the bottleneck shifts from <strong>payment execution</strong> to <strong>financial operations</strong>: <span class="dim">liquidity, segregation, reconciliation, reporting, counterparty risk, and interoperability across fiat and digital assets.</span>
+          </div>
+        </div>
+        <div class="flow-item reveal reveal-delay-3">
+          <div class="flow-number">2</div>
+          <div class="flow-text">
+            Most infrastructure was built around <strong>transactions</strong>. <span class="dim">The next generation of regulated money movement needs an account-level operating core.</span>
+          </div>
+        </div>
+        <div class="flow-item reveal reveal-delay-4">
+          <div class="flow-number">3</div>
+          <div class="flow-text">
+            <strong>Depa is built for that shift</strong>: one ledger for fiat, stablecoins, and eventually tokenized positions.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SLIDE 4: TRACTION ═══════════ -->
+  <section id="traction">
+    <div class="section-inner">
+      <div class="section-label reveal">Traction</div>
+      <h2 class="section-heading reveal reveal-delay-1">
+        Real revenue, <span class="serif-italic">real infrastructure</span>
+      </h2>
+
+      <div class="traction-grid">
+        <div class="traction-card reveal reveal-delay-1">
+          <div class="traction-value">$5.2<span class="unit">M</span></div>
+          <div class="traction-label">Revenue in 2025 — grew from $600k in 2024</div>
+        </div>
+        <div class="traction-card reveal reveal-delay-2">
+          <div class="traction-value">$2<span class="unit">M+</span></div>
+          <div class="traction-label">Revenue in 2026 YTD, with customer concentration solved</div>
+        </div>
+        <div class="traction-card reveal reveal-delay-3">
+          <div class="traction-value">3<span class="unit">×</span></div>
+          <div class="traction-label">Signing new contracts at 3× the 2025 pace</div>
+        </div>
+        <div class="traction-card reveal reveal-delay-4">
+          <div class="traction-value">$750<span class="unit">k+</span></div>
+          <div class="traction-label">Revenue per employee</div>
+        </div>
+        <div class="traction-card reveal reveal-delay-5">
+          <div class="traction-value">15<span class="unit">k+</span></div>
+          <div class="traction-label">Payments processed per day with a team of 13</div>
+        </div>
+        <div class="traction-card reveal reveal-delay-6">
+          <div class="traction-value">0.02<span class="unit">%</span></div>
+          <div class="traction-label">Chargeback rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SLIDE 5: TEAM ═══════════ -->
+  <section id="team">
+    <div class="section-inner">
+      <div class="section-label reveal">Team</div>
+      <h2 class="section-heading reveal reveal-delay-1">
+        Built by regulated financial <span class="serif-italic">infrastructure operators</span>
+      </h2>
+
+      <div class="team-grid">
+        <div class="team-card reveal reveal-delay-2">
+          <div class="team-card-header">
+            <div class="team-avatar">A</div>
+            <div>
+              <div class="team-name">Alberto</div>
+              <div class="team-role">CEO</div>
+            </div>
+          </div>
+          <p class="team-bio">
+            Formerly Spanish Stock Exchange, BMW, and Fidor Bank. Built core banking and market infrastructure for major exchanges over the last decade.
+          </p>
+        </div>
+
+        <div class="team-card reveal reveal-delay-3">
+          <div class="team-card-header">
+            <div class="team-avatar">P</div>
+            <div>
+              <div class="team-name">Pere</div>
+              <div class="team-role">CFO</div>
+            </div>
+          </div>
+          <p class="team-bio">
+            25+ years in finance leadership. Former Group Head of Finance at BVNK and Ebury, bringing deep experience across fintech, payments, treasury, and scaling regulated financial operations.
+          </p>
+        </div>
+
+        <div class="team-card reveal reveal-delay-4">
+          <div class="team-card-header">
+            <div class="team-avatar">M</div>
+            <div>
+              <div class="team-name">Michael</div>
+              <div class="team-role">COO</div>
+            </div>
+          </div>
+          <p class="team-bio">
+            25+ years in Banking. Co-founder of Fidor Bank and former CIO of HBL Bank. Led two successful IPOs and the sale of Fidor to BPCE.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SLIDE 6: ROUND ═══════════ -->
+  <section class="round-section" id="round">
+    <div class="section-inner">
+      <div class="section-label reveal">The Round</div>
+      <h2 class="round-heading reveal reveal-delay-1">
+        Seed round to scale from PSP traction into the <span class="serif-italic">operating core</span> for regulated money businesses
+      </h2>
+      <p class="round-subtext reveal reveal-delay-2">Use of proceeds</p>
+
+      <div class="proceeds-grid">
+        <div class="proceed-item reveal reveal-delay-3">
+          <div class="proceed-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="22" y1="11" x2="16" y2="11"/>
+            </svg>
+          </div>
+          <div class="proceed-text">
+            Grow the team from <strong>15 to 45</strong> over the next 24 months
+          </div>
+        </div>
+        <div class="proceed-item reveal reveal-delay-4">
+          <div class="proceed-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="proceed-text">
+            Strengthen our capital and treasury position to support <strong>regulatory expansion</strong>
+          </div>
+        </div>
+        <div class="proceed-item reveal reveal-delay-5">
+          <div class="proceed-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="proceed-text">
+            Build enterprise-grade capabilities for <strong>PSPs today</strong> and <strong>banks tomorrow</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <section class="footer">
+    <div class="footer-content reveal">
+      <div class="footer-logo">Depa</div>
+      <p class="footer-text">The treasury-native OS for regulated, multi-asset money businesses.</p>
+      <a href="mailto:hello@depa.com" class="cta-button">
+        Get in touch
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <p class="confidential">Confidential — Depa 2026</p>
+    </div>
+  </section>
+
+  <script>
+    // ── Reveal on scroll ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Nav dots ──
+    const sections = document.querySelectorAll('section[id]');
+    const dots = document.querySelectorAll('.nav-dot');
+
+    // Click to scroll
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const target = document.getElementById(dot.dataset.target);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Highlight active dot
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          dots.forEach(d => d.classList.remove('active'));
+          const activeDot = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
+          if (activeDot) activeDot.classList.add('active');
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => sectionObserver.observe(s));
+  </script>
+</body>
+</html>

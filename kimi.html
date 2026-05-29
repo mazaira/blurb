@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Depa — Seed Round · Kimi 2.6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: rgb(245, 246, 252);
+      --fg: rgb(20, 20, 26);
+      --card: rgb(255, 255, 255);
+      --card-fg: rgb(20, 20, 26);
+      --primary: rgb(35, 180, 125);
+      --primary-fg: rgb(255, 255, 255);
+      --secondary: rgb(158, 245, 195);
+      --secondary-fg: rgb(20, 20, 26);
+      --muted: rgb(240, 242, 248);
+      --muted-fg: rgb(122, 122, 122);
+      --accent-cyan: rgb(46, 208, 255);
+      --destructive: rgb(233, 46, 74);
+      --destructive-fg: rgb(255, 255, 255);
+      --border: rgb(228, 228, 228);
+      --ring: rgb(35, 180, 125);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      scroll-snap-align: start;
+      padding: 5rem 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--fg);
+    }
+
+    h1 {
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight: 800;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 6.5vw, 3.4rem);
+      font-weight: 800;
+    }
+
+    h3 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: 700;
+    }
+
+    .lead {
+      font-size: clamp(1.1rem, 3.2vw, 1.55rem);
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--fg);
+    }
+
+    .body-text {
+      font-size: clamp(1rem, 2.6vw, 1.2rem);
+      line-height: 1.65;
+      color: var(--fg);
+      opacity: 0.92;
+    }
+
+    /* Utilities */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .text-primary { color: var(--primary); }
+    .text-muted { color: var(--muted-fg); }
+
+    /* Hero */
+    .hero .container { position: relative; z-index: 1; }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(158,245,195,0.45) 0%, transparent 70%);
+    }
+
+    .brand {
+      background: linear-gradient(135deg, var(--fg) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.25rem;
+    }
+
+    .subtitle {
+      max-width: 34ch;
+      margin-top: 0.5rem;
+    }
+
+    .hero-line {
+      margin-top: 1.25rem;
+      max-width: 52ch;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted-fg);
+      animation: bounce 2.2s infinite ease-in-out;
+      z-index: 2;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Differentiation */
+    .quote {
+      position: relative;
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--primary);
+      margin: 1.5rem 0;
+      padding-left: 1.25rem;
+      border-left: 4px solid var(--secondary);
+      max-width: 50ch;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      max-width: 62ch;
+    }
+
+    /* Why now */
+    .whynow::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 70% 50% at 20% 80%, rgba(46,208,255,0.08) 0%, transparent 60%);
+    }
+
+    /* Traction */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.875rem;
+      margin-top: 1.75rem;
+    }
+
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(20,20,26,0.06);
+      border-color: var(--secondary);
+    }
+
+    .metric-value {
+      font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      line-height: 1.1;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      margin-top: 0.5rem;
+      line-height: 1.35;
+    }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.75rem;
+      width: 100%;
+    }
+
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease;
+    }
+
+    .team-card:hover { border-color: var(--secondary); }
+
+    .team-card h3 { margin-bottom: 0.25rem; }
+
+    .team-card .tag { margin-bottom: 0.75rem; }
+
+    .team-card p {
+      font-size: clamp(0.9rem, 2.4vw, 1.05rem);
+      line-height: 1.55;
+      color: var(--fg);
+      opacity: 0.9;
+    }
+
+    /* Round */
+    .proceeds-list {
+      list-style: none;
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .proceeds-list li {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.15rem 1.25rem 1.15rem 2.75rem;
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .proceeds-list li::before {
+      content: "";
+      position: absolute;
+      left: 1.15rem;
+      top: 1.45rem;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .cta {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2.5rem;
+      background: var(--fg);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .cta a:hover {
+      transform: scale(1.03);
+      background: var(--primary);
+      color: var(--primary-fg);
+    }
+
+    /* Pagination dots */
+    .pagination {
+      position: fixed;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 50;
+    }
+
+    .pagination button {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .pagination button.active {
+      background: var(--primary);
+      transform: scale(1.25);
+    }
+
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; scroll-snap-type: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .scroll-hint { animation: none; }
+    }
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      section { padding: 5rem 2.5rem; }
+      .metrics-grid { gap: 1rem; }
+      .metric-card { padding: 1.5rem; }
+      .metric-label { font-size: 0.95rem; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .team-grid { grid-template-columns: repeat(3, 1fr); }
+      .metrics-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    }
+
+    @media (max-width: 640px) {
+      .pagination { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="pagination" aria-label="Slides"></nav>
+
+  <!-- 1. Hero -->
+  <section id="depa" class="hero">
+    <div class="container">
+      <div class="reveal">
+        <span class="tag" style="background: var(--secondary); color: var(--secondary-fg); margin-bottom: 1rem;">Seed Round</span>
+        <h1 class="brand">Depa</h1>
+        <p class="lead subtitle">The treasury-native OS for regulated, multi-asset money businesses</p>
+        <p class="hero-line body-text">
+          <span class="text-primary">One ledger</span> — fiat and stablecoin — for payments, treasury, and risk
+        </p>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2. Differentiation -->
+  <section id="different" class="different">
+    <div class="container">
+      <div class="reveal">
+        <h2 style="max-width: 22ch;">How are we different from the other 120 stablecoin companies?</h2>
+        <p class="quote">Depa is what you'd get if BVNK and Formance had a baby</p>
+        <div class="stack body-text">
+          <p>Onrampers, Bridge, Noah's... their product centers on the transaction: money in, money out.</p>
+          <p><strong>Depa begins at the account.</strong> Every payment settles against a live treasury position on one ledger, so reconciliation, segregation, nostro/vostro and counterparty risk aren't features, they're the substrate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Why now -->
+  <section id="whynow" class="whynow">
+    <div class="container">
+      <div class="reveal">
+        <span class="tag" style="background: var(--muted); color: var(--muted-fg); margin-bottom: 1rem;">Market Shift</span>
+        <h2>Why now?</h2>
+        <div class="stack body-text" style="margin-top: 1.5rem;">
+          <p>Stablecoins are moving from crypto-native settlement into regulated financial infrastructure.</p>
+          <p>As PSPs and banks adopt them, the bottleneck shifts from payment execution to financial operations: liquidity, segregation, reconciliation, reporting, counterparty risk, and interoperability across fiat and digital assets.</p>
+          <p>Most infrastructure was built around transactions. The next generation of regulated money movement needs an <span class="text-primary">account-level operating core</span>.</p>
+          <p><strong>Depa is built for that shift:</strong> one ledger for fiat, stablecoins, and eventually tokenized positions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Traction -->
+  <section id="traction" class="traction">
+    <div class="container" style="width:100%">
+      <div class="reveal" style="width:100%">
+        <span class="tag" style="background: var(--secondary); color: var(--secondary-fg); margin-bottom: 1rem;">Traction</span>
+        <h2 style="margin-bottom: 0.25rem;">From $600k to $5.2M</h2>
+        <p class="body-text text-muted" style="margin-bottom: 0.5rem;">And accelerating into 2026</p>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-value">$600k → $5.2M</div>
+            <div class="metric-label">Revenue 2024 to 2025</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$2M+</div>
+            <div class="metric-label">2026 YTD revenue, with customer concentration solved</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">3×</div>
+            <div class="metric-label">Signing new contracts at the 2025 pace</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$750k+</div>
+            <div class="metric-label">Revenue per employee</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">15k+</div>
+            <div class="metric-label">Payments/day with a team of 13</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">0.02%</div>
+            <div class="metric-label">Chargeback rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Team -->
+  <section id="team" class="team">
+    <div class="container" style="width:100%">
+      <div class="reveal" style="width:100%">
+        <h2 style="max-width: 26ch; margin-bottom: 0.25rem;">Built by regulated financial infrastructure operators</h2>
+        <div class="team-grid">
+          <article class="team-card">
+            <h3>Alberto</h3>
+            <span class="tag" style="background: var(--primary); color: var(--primary-fg);">CEO</span>
+            <p>Formerly Spanish Stock Exchange, BMW, and Fidor Bank. Built core banking and market infrastructure for major exchanges over the last decade.</p>
+          </article>
+          <article class="team-card">
+            <h3>Pere</h3>
+            <span class="tag" style="background: var(--primary); color: var(--primary-fg);">CFO</span>
+            <p>25+ years in finance leadership. Former Group Head of Finance at BVNK and Ebury, bringing deep experience across fintech, payments, treasury, and scaling regulated financial operations.</p>
+          </article>
+          <article class="team-card">
+            <h3>Michael</h3>
+            <span class="tag" style="background: var(--primary); color: var(--primary-fg);">COO</span>
+            <p>25+ years in Banking. Co-founder of Fidor Bank and former CIO of HBL Bank. Led two successful IPOs and the sale of Fidor to BPCE.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Round -->
+  <section id="round" class="round">
+    <div class="container" style="max-width: 720px;">
+      <div class="reveal">
+        <span class="tag" style="background: var(--secondary); color: var(--secondary-fg); margin-bottom: 1rem;">Seed Round</span>
+        <h2>Depa is raising its seed round to scale from PSP traction into the operating core for regulated money businesses</h2>
+        <p class="lead" style="margin-top: 1.75rem; margin-bottom: 0.5rem;">Use of proceeds</p>
+        <ul class="proceeds-list">
+          <li>Grow the team from 15 to 45 over the next 24 months</li>
+          <li>Strengthen our capital and treasury position to support regulatory expansion</li>
+          <li>Build enterprise-grade capabilities for PSPs today and banks tomorrow</li>
+        </ul>
+        <div class="cta">
+          <a href="#">Join the round</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+      const pagination = document.querySelector('.pagination');
+
+      // Build dots
+      sections.forEach((sec, idx) => {
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', `Go to slide ${idx + 1}`);
+        btn.addEventListener('click', () => {
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        pagination.appendChild(btn);
+      });
+
+      const dots = pagination.querySelectorAll('button');
+
+      // Highlight active dot + reveal animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = Array.from(sections).indexOf(entry.target);
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[index]) dots[index].classList.add('active');
+
+            entry.target.querySelectorAll('.reveal').forEach(el => {
+              el.classList.add('visible');
+            });
+          }
+        });
+      }, { threshold: 0.45 });
+
+      sections.forEach(sec => observer.observe(sec));
+    });
+  </script>
+</body>
+</html>
