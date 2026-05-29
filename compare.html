@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depa — One-shot comparison</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: rgb(245, 246, 252);
+        --fg: rgb(20, 20, 26);
+        --card: rgb(255, 255, 255);
+        --primary: rgb(35, 180, 125);
+        --muted: rgb(122, 122, 122);
+        --border: rgb(228, 228, 228);
+        --display: "Space Grotesk", sans-serif;
+        --body: "Inter", sans-serif;
+        --toolbar-h: 52px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: var(--body);
+        background: var(--bg);
+        color: var(--fg);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        flex-shrink: 0;
+        height: var(--toolbar-h);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 16px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        z-index: 20;
+      }
+
+      .toolbar a {
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .toolbar a:hover {
+        color: var(--primary);
+      }
+
+      .toolbar-title {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 14px;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+      }
+
+      label.sync {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .panel {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        border-right: 1px solid var(--border);
+        background: var(--card);
+      }
+
+      .panel:last-child {
+        border-right: none;
+      }
+
+      .panel-header {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+      }
+
+      .panel-label {
+        font-family: var(--display);
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .panel-open {
+        font-size: 12px;
+        color: var(--primary);
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+
+      .panel-open:hover {
+        text-decoration: underline;
+      }
+
+      .panel iframe {
+        flex: 1;
+        width: 100%;
+        border: none;
+        min-height: 0;
+        background: var(--bg);
+      }
+
+      /* Tablet: 2×2 */
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-rows: repeat(2, minmax(0, 1fr));
+          overflow: auto;
+        }
+
+        body {
+          overflow: auto;
+        }
+
+        html,
+        body {
+          height: auto;
+          min-height: 100%;
+        }
+
+        .panel {
+          min-height: 50dvh;
+        }
+      }
+
+      /* Mobile: stacked scroll */
+      @media (max-width: 640px) {
+        .grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: none;
+        }
+
+        .panel {
+          min-height: 75dvh;
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .toolbar-title {
+          font-size: 13px;
+        }
+      }
+
+      .loading {
+        padding: 48px 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="toolbar">
+      <a href="/">← Menu</a>
+      <span class="toolbar-title">One-shot comparison — same brief, four models</span>
+      <div class="toolbar-actions">
+        <label class="sync">
+          <input type="checkbox" id="sync-scroll" checked />
+          Sync scroll
+        </label>
+      </div>
+    </header>
+
+    <div class="grid" id="grid">
+      <p class="loading">Loading versions…</p>
+    </div>
+
+    <script type="module">
+      const grid = document.getElementById("grid");
+      const syncCheckbox = document.getElementById("sync-scroll");
+      let syncing = false;
+
+      function getScrollRoot(doc) {
+        const deck = doc.querySelector(".deck");
+        if (deck) return deck;
+        return doc.scrollingElement || doc.documentElement;
+      }
+
+      function setupSyncScroll(iframes) {
+        const roots = [];
+
+        function attach(iframe) {
+          const doc = iframe.contentDocument;
+          if (!doc) return;
+          const root = getScrollRoot(doc);
+          roots.push({ iframe, root });
+          root.addEventListener(
+            "scroll",
+            () => {
+              if (!syncCheckbox.checked || syncing) return;
+              syncing = true;
+              const ratio =
+                root.scrollTop / Math.max(1, root.scrollHeight - root.clientHeight);
+              for (const { root: other } of roots) {
+                if (other === root) continue;
+                const max = Math.max(1, other.scrollHeight - other.clientHeight);
+                other.scrollTop = ratio * max;
+              }
+              requestAnimationFrame(() => {
+                syncing = false;
+              });
+            },
+            { passive: true }
+          );
+        }
+
+        for (const iframe of iframes) {
+          if (iframe.contentDocument?.readyState === "complete") {
+            attach(iframe);
+          } else {
+            iframe.addEventListener("load", () => attach(iframe), { once: true });
+          }
+        }
+      }
+
+      fetch("/versions.json")
+        .then((r) => r.json())
+        .then((data) => {
+          const items = data.oneShot?.items ?? [];
+          if (items.length === 0) {
+            grid.innerHTML =
+              '<p class="loading">No one-shot versions found.</p>';
+            return;
+          }
+
+          grid.innerHTML = items
+            .map(
+              (v) => `
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-label">${v.label}</span>
+                <a class="panel-open" href="${v.path}" target="_blank" rel="noopener">Open ↗</a>
+              </div>
+              <iframe
+                title="${v.label} deck"
+                src="${v.path}"
+                loading="lazy"
+              ></iframe>
+            </div>`
+            )
+            .join("");
+
+          const iframes = [...grid.querySelectorAll("iframe")];
+          let loaded = 0;
+          const onLoad = () => {
+            loaded += 1;
+            if (loaded >= iframes.length) setupSyncScroll(iframes);
+          };
+          for (const iframe of iframes) {
+            if (iframe.contentDocument?.readyState === "complete") onLoad();
+            else iframe.addEventListener("load", onLoad, { once: true });
+          }
+        })
+        .catch(() => {
+          grid.innerHTML =
+            '<p class="loading">Could not load versions.</p>';
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depa — Seed Round · Current version</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: rgb(245, 246, 252);
+        --fg: rgb(20, 20, 26);
+        --card: rgb(255, 255, 255);
+        --primary: rgb(35, 180, 125);
+        --muted: rgb(122, 122, 122);
+        --border: rgb(228, 228, 228);
+        --display: "Space Grotesk", sans-serif;
+        --body: "Inter", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--body);
+        background: var(--bg);
+        color: var(--fg);
+        -webkit-font-smoothing: antialiased;
+      }
+      .deck {
+        scroll-snap-type: y proximity;
+        height: 100dvh;
+        overflow-y: auto;
+      }
+      section {
+        scroll-snap-align: start;
+        min-height: 100dvh;
+        padding: 64px 24px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: 1px solid var(--border);
+      }
+      .inner {
+        max-width: 720px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .eyebrow {
+        font-family: var(--display);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 16px;
+      }
+      h1,
+      h2 {
+        font-family: var(--display);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      h1 {
+        font-size: clamp(36px, 9vw, 64px);
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: clamp(26px, 6vw, 40px);
+        margin-bottom: 20px;
+      }
+      .lead {
+        font-size: clamp(17px, 4vw, 22px);
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      p {
+        font-size: 17px;
+        line-height: 1.65;
+        margin-bottom: 16px;
+      }
+      ul {
+        margin: 0 0 16px 1.1em;
+        font-size: 17px;
+        line-height: 1.65;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      .team p {
+        margin-bottom: 20px;
+      }
+      .team strong {
+        font-family: var(--display);
+        font-weight: 600;
+      }
+      .back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 10;
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 8px 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .back:hover {
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="back" href="/">← Menu</a>
+    <div class="deck">
+      <section>
+        <div class="inner">
+          <p class="eyebrow">Depa · Seed round</p>
+          <h1>The treasury-native OS for regulated, multi-asset money businesses</h1>
+          <p class="lead">
+            One ledger — fiat and stablecoin — for payments, treasury, and risk.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="inner">
+          <p class="eyebrow">Differentiation</p>
+          <h2>What you'd get if BVNK and Formance had a baby</h2>
+          <p>
+            Onrampers, Bridge, Noah's… their product centers on the transaction: money
+            in, money out. Depa begins at the account. Every payment settles against a
+            live treasury position on one ledger, so reconciliation, segregation,
+            nostro/vostro and counterparty risk aren't features — they're the substrate.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="inner">
+          <p class="eyebrow">Why now</p>
+          <h2>Account-level infrastructure for regulated money movement</h2>
+          <p>
+            Stablecoins are moving from crypto-native settlement into regulated
+            financial infrastructure. As PSPs and banks adopt them, the bottleneck
+            shifts to financial operations: liquidity, segregation, reconciliation,
+            reporting, counterparty risk, and interoperability across fiat and digital
+            assets.
+          </p>
+          <p>
+            Depa is built for that shift: one ledger for fiat, stablecoins, and
+            eventually tokenized positions.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="inner">
+          <p class="eyebrow">Traction</p>
+          <h2>[Traction headline]</h2>
+          <ul>
+            <li>Grew from $600k revenue in 2024 to $5.2M in 2025</li>
+            <li>$2M+ revenue in 2026 YTD, with customer concentration solved</li>
+            <li>Signing new contracts at 3× the 2025 pace</li>
+            <li>$750k+ revenue per employee</li>
+            <li>Processing 15k+ payments/day with a team of 13</li>
+            <li>0.02% chargeback rate</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="inner team">
+          <p class="eyebrow">Team</p>
+          <h2>Built by regulated financial infrastructure operators</h2>
+          <p>
+            <strong>Alberto — CEO</strong><br />
+            Formerly Spanish Stock Exchange, BMW, and Fidor Bank. Built core banking and
+            market infrastructure for major exchanges over the last decade.
+          </p>
+          <p>
+            <strong>Pere — CFO</strong><br />
+            25+ years in finance leadership. Former Group Head of Finance at BVNK and
+            Ebury, across fintech, payments, treasury, and scaling regulated financial
+            operations.
+          </p>
+          <p>
+            <strong>Michael — COO</strong><br />
+            25+ years in Banking. Co-founder of Fidor Bank and former CIO of HBL Bank.
+            Led two successful IPOs and the sale of Fidor to BPCE.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="inner">
+          <p class="eyebrow">Round</p>
+          <h2>Seed round</h2>
+          <p>
+            Depa is raising its seed round to scale from PSP tarction into the operating
+            core for regulated money businesses.
+          </p>
+          <p><strong>Use of proceeds</strong></p>
+          <ul>
+            <li>Grow the team from 15 to 45 over the next 24 months</li>
+            <li>
+              Strengthen capital and treasury position to support regulatory expansion
+            </li>
+            <li>
+              Build enterprise-grade capabilities for PSPs today and banks tomorrow
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

@@ -16,6 +16,7 @@
         --fg: rgb(20, 20, 26);
         --card: rgb(255, 255, 255);
         --primary: rgb(35, 180, 125);
+        --primary-soft: rgba(35, 180, 125, 0.1);
         --muted: rgb(122, 122, 122);
         --border: rgb(228, 228, 228);
         --display: "Space Grotesk", sans-serif;
@@ -46,6 +47,18 @@
         margin-bottom: 40px;
       }
 
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .brand img {
+        height: 28px;
+        width: auto;
+      }
+
       .logo {
         font-family: var(--display);
         font-size: 14px;
@@ -53,7 +66,6 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--primary);
-        margin-bottom: 12px;
       }
 
       h1 {
@@ -69,23 +81,6 @@
         color: var(--muted);
         font-size: 15px;
         line-height: 1.6;
-      }
-
-      .section-label {
-        font-family: var(--display);
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 12px;
-      }
-
-      ul {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
       }
 
       a.card {
@@ -107,17 +102,36 @@
         box-shadow: 0 8px 32px rgba(35, 180, 125, 0.12);
       }
 
+      a.card-primary {
+        padding: 24px 22px;
+        border-color: var(--primary);
+        background: linear-gradient(
+          135deg,
+          var(--card) 0%,
+          var(--primary-soft) 100%
+        );
+        margin-bottom: 48px;
+      }
+
+      a.card-primary:hover {
+        box-shadow: 0 12px 40px rgba(35, 180, 125, 0.18);
+      }
+
       .card-title {
         font-family: var(--display);
         font-weight: 600;
         font-size: 16px;
       }
 
-      .card-path {
-        font-size: 12px;
+      a.card-primary .card-title {
+        font-size: 20px;
+      }
+
+      .card-meta {
+        font-size: 14px;
         color: var(--muted);
-        margin-top: 4px;
-        font-family: ui-monospace, monospace;
+        margin-top: 6px;
+        line-height: 1.5;
       }
 
       .arrow {
@@ -126,16 +140,71 @@
         flex-shrink: 0;
       }
 
-      .empty {
-        padding: 24px;
+      a.card-primary .arrow {
+        font-size: 22px;
+      }
+
+      .archive {
+        border-top: 1px solid var(--border);
+        padding-top: 32px;
+      }
+
+      .archive-title {
+        font-family: var(--display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .archive-desc {
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      a.card-compare {
+        margin-bottom: 16px;
+        border-style: dashed;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      a.card-compact {
+        padding: 14px 16px;
+      }
+
+      a.card-compact .card-title {
+        font-size: 15px;
+      }
+
+      .card-model {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .empty,
+      .unavailable {
+        padding: 20px;
         border: 1px dashed var(--border);
         border-radius: 14px;
         color: var(--muted);
         font-size: 14px;
         line-height: 1.6;
+        margin-bottom: 48px;
       }
 
-      .empty code {
+      .empty code,
+      .unavailable code {
         font-size: 13px;
         background: var(--card);
         padding: 2px 6px;
@@ -159,57 +228,110 @@
   <body>
     <div class="wrap">
       <header>
-        <p class="logo">Depa</p>
-        <h1>Seed round blurb versions</h1>
+        <div class="brand">
+          <img id="logo-img" src="/assets/logo.svg" alt="" hidden />
+          <p class="logo">Depa</p>
+        </div>
+        <h1>Seed round blurb</h1>
         <p class="subtitle">
-          Pick a deck variant to preview. Edits to any <code>.html</code> file reload
-          instantly in the browser.
+          Working deck and archived one-shot model outputs for the seed round narrative.
         </p>
       </header>
 
-      <p class="section-label">Versions</p>
-      <ul id="versions"></ul>
+      <div id="current"></div>
+
+      <section class="archive" id="archive" hidden>
+        <h2 class="archive-title">One shot tries</h2>
+        <p class="archive-desc" id="one-shot-desc"></p>
+        <ul id="one-shot-list"></ul>
+      </section>
 
       <footer>
-        Source copy in <a href="/text.md">text.md</a>. Add a new
-        <code>your-version.html</code> in this folder — it appears here automatically.
+        Source copy in <a href="/text.md">text.md</a> · Template:
+        <code>current version/template.html</code>
       </footer>
     </div>
 
     <script type="module">
-      const list = document.getElementById("versions");
+      const currentEl = document.getElementById("current");
+      const archiveEl = document.getElementById("archive");
+      const oneShotDesc = document.getElementById("one-shot-desc");
+      const oneShotList = document.getElementById("one-shot-list");
+      const logoImg = document.getElementById("logo-img");
+
+      for (const src of [
+        "/assets/depa-logo.svg",
+        "/assets/logo.svg",
+        "/assets/logo.png",
+      ]) {
+        const probe = new Image();
+        probe.onload = () => {
+          logoImg.src = src;
+          logoImg.hidden = false;
+        };
+        probe.src = src;
+      }
+
+      function renderOneShotCard(v) {
+        return `
+          <li>
+            <a class="card card-compact" href="${v.path}">
+              <div>
+                <div class="card-title">${v.label}</div>
+              </div>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </li>`;
+      }
 
       fetch("/versions.json")
         .then((r) => r.json())
-        .then((versions) => {
-          if (versions.length === 0) {
-            list.innerHTML = `
-              <li class="empty">
-                No versions yet. Add a <code>name.html</code> file next to
-                <code>index.html</code> and refresh.
-              </li>`;
-            return;
+        .then((data) => {
+          const current = data.current;
+          const oneShot = data.oneShot;
+
+          if (current?.available) {
+            currentEl.innerHTML = `
+              <a class="card card-primary" href="${current.path}">
+                <div>
+                  <div class="card-title">${current.title}</div>
+                  <div class="card-meta">The deck we are iterating on for the seed round.</div>
+                </div>
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>`;
+          } else {
+            currentEl.innerHTML = `
+              <div class="unavailable">
+                No current deck yet. Add <code>current version/index.html</code>.
+              </div>`;
           }
-          list.innerHTML = versions
-            .map(
-              (v) => `
-              <li>
-                <a class="card" href="${v.path}">
-                  <div>
-                    <div class="card-title">${v.label}</div>
-                    <div class="card-path">${v.path}</div>
-                  </div>
-                  <span class="arrow" aria-hidden="true">→</span>
-                </a>
-              </li>`
-            )
-            .join("");
+
+          const items = oneShot?.items ?? [];
+          if (items.length === 0) return;
+
+          archiveEl.hidden = false;
+          oneShotDesc.textContent =
+            oneShot.description ??
+            "Original outputs from a one-shot try with the same context, rendered by different models.";
+
+          const comparePath = data.compare?.path ?? "/compare.html";
+          const compareHtml = `
+            <a class="card card-compare" href="${comparePath}">
+              <div>
+                <div class="card-title">${data.compare?.title ?? "Compare all side by side"}</div>
+                <div class="card-meta">View the four raw one-shot decks in a responsive grid.</div>
+              </div>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>`;
+
+          oneShotList.innerHTML =
+            compareHtml + items.map(renderOneShotCard).join("");
         })
         .catch(() => {
-          list.innerHTML = `
-            <li class="empty">
+          currentEl.innerHTML = `
+            <p class="empty">
               Could not load versions. Run <code>npm run dev</code> to start the server.
-            </li>`;
+            </p>`;
         });
     </script>
   </body>

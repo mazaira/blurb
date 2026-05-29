@@ -1,5 +1,13 @@
 {
   "rewrites": [
-    { "source": "/v/:id", "destination": "/:id.html" }
+    { "source": "/v/current", "destination": "/current%20version/index.html" },
+    {
+      "source": "/v/one-shot/:id",
+      "destination": "/One%20shot%20tries/:id.html"
+    },
+    {
+      "source": "/v/current/:id",
+      "destination": "/current%20version/:id.html"
+    }
   ]
 }
