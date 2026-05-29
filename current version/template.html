@@ -24,6 +24,8 @@
         --fg: rgb(20, 20, 26);
         --card: rgb(255, 255, 255);
         --primary: rgb(35, 180, 125);
+        --secondary: rgb(158, 245, 195);
+        --accent: rgb(46, 208, 255);
         --muted: rgb(122, 122, 122);
         --border: rgb(228, 228, 228);
         --display: "Space Grotesk", sans-serif;
@@ -85,6 +87,32 @@
       h2 {
         font-size: clamp(26px, 6vw, 40px);
         margin-bottom: 20px;
+      }
+      .differentiation h2 {
+        max-width: 22ch;
+      }
+      .grad-text {
+        background: linear-gradient(100deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .differentiation .quote {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: clamp(22px, 6vw, 32px);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin-bottom: 28px;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        max-width: 62ch;
+      }
+      .stack p {
+        margin-bottom: 0;
       }
       .lead {
         font-size: clamp(17px, 4vw, 22px);
@@ -148,17 +176,24 @@
       </section>
 
       <!-- 2. Differentiation -->
-      <section id="differentiation">
+      <section id="differentiation" class="differentiation">
         <div class="inner">
-          <p class="eyebrow">Differentiation</p>
-          <h2>What you'd get if BVNK and Formance had a baby</h2>
-          <p>
-            Onrampers, Bridge, Noah's… their product centers on the transaction:
-            money in, money out. Depa begins at the account. Every payment settles
-            against a live treasury position on one ledger, so reconciliation,
-            segregation, nostro/vostro and counterparty risk aren't features —
-            they're the substrate.
+          <p class="eyebrow">The difference</p>
+          <h2>How are we different from the other 120 stablecoin companies?</h2>
+          <p class="quote grad-text">
+            Depa is what you'd get if BVNK and Formance had a baby.
           </p>
+          <div class="stack">
+            <p>
+              Onrampers, Bridge, Noah's… their product centers on the transaction:
+              money in, money out.
+            </p>
+            <p>
+              <strong>Depa begins at the account.</strong> Every payment settles against
+              a live treasury position on one ledger, so reconciliation, segregation,
+              nostro/vostro and counterparty risk aren't features, they're the substrate.
+            </p>
+          </div>
         </div>
       </section>
 

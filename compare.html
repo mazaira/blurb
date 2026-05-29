@@ -223,49 +223,123 @@
     <script type="module">
       const grid = document.getElementById("grid");
       const syncCheckbox = document.getElementById("sync-scroll");
-      let syncing = false;
+      let syncLock = false;
+      let syncLockTimer = 0;
 
-      function getScrollRoot(doc) {
+      /** Find the element that actually scrolls (deck vs document). */
+      function getScrollTarget(doc) {
+        const win = doc.defaultView;
+        if (!win) return null;
+
+        const docEl = doc.documentElement;
         const deck = doc.querySelector(".deck");
-        if (deck) return deck;
-        return doc.scrollingElement || doc.documentElement;
+
+        if (deck) {
+          const style = win.getComputedStyle(deck);
+          const overflowY = style.overflowY;
+          const deckScrolls =
+            (overflowY === "auto" ||
+              overflowY === "scroll" ||
+              overflowY === "overlay") &&
+            deck.scrollHeight > deck.clientHeight + 2;
+
+          if (deckScrolls) {
+            return { kind: "element", el: deck, win };
+          }
+        }
+
+        return { kind: "document", el: docEl, win };
+      }
+
+      function scrollMax(target) {
+        if (target.kind === "element") {
+          return Math.max(0, target.el.scrollHeight - target.el.clientHeight);
+        }
+        return Math.max(
+          0,
+          target.el.scrollHeight - target.win.innerHeight
+        );
+      }
+
+      function scrollTop(target) {
+        if (target.kind === "element") {
+          return target.el.scrollTop;
+        }
+        return target.win.scrollY ?? target.el.scrollTop;
+      }
+
+      function setScrollTop(target, value) {
+        if (target.kind === "element") {
+          target.el.scrollTop = value;
+        } else {
+          target.win.scrollTo(0, value);
+        }
+      }
+
+      function scrollRatio(target) {
+        const max = scrollMax(target);
+        if (max <= 0) return 0;
+        return scrollTop(target) / max;
       }
 
       function setupSyncScroll(iframes) {
-        const roots = [];
+        const targets = [];
+        let wired = false;
 
-        function attach(iframe) {
-          const doc = iframe.contentDocument;
-          if (!doc) return;
-          const root = getScrollRoot(doc);
-          roots.push({ iframe, root });
-          root.addEventListener(
-            "scroll",
-            () => {
-              if (!syncCheckbox.checked || syncing) return;
-              syncing = true;
-              const ratio =
-                root.scrollTop / Math.max(1, root.scrollHeight - root.clientHeight);
-              for (const { root: other } of roots) {
-                if (other === root) continue;
-                const max = Math.max(1, other.scrollHeight - other.clientHeight);
-                other.scrollTop = ratio * max;
-              }
-              requestAnimationFrame(() => {
-                syncing = false;
-              });
-            },
-            { passive: true }
+        function wireScrollSync() {
+          if (wired) return;
+          const ready = iframes.every(
+            (f) => f.contentDocument?.readyState === "complete"
           );
+          if (!ready) return;
+          wired = true;
+
+          for (const iframe of iframes) {
+            const doc = iframe.contentDocument;
+            if (!doc) continue;
+
+            const target = getScrollTarget(doc);
+            if (!target) continue;
+
+            targets.push(target);
+
+            const onScroll = () => {
+              if (!syncCheckbox.checked || syncLock) return;
+
+              syncLock = true;
+              clearTimeout(syncLockTimer);
+
+              const ratio = scrollRatio(target);
+              for (const other of targets) {
+                if (other === target) continue;
+                setScrollTop(other, ratio * scrollMax(other));
+              }
+
+              syncLockTimer = setTimeout(() => {
+                syncLock = false;
+              }, 80);
+            };
+
+            if (target.kind === "element") {
+              target.el.addEventListener("scroll", onScroll, { passive: true });
+            } else {
+              target.win.addEventListener("scroll", onScroll, { passive: true });
+            }
+          }
+
+          setTimeout(() => {
+            if (!syncCheckbox.checked || targets.length < 2) return;
+            const ratio = scrollRatio(targets[0]);
+            for (let i = 1; i < targets.length; i++) {
+              setScrollTop(targets[i], ratio * scrollMax(targets[i]));
+            }
+          }, 500);
         }
 
         for (const iframe of iframes) {
-          if (iframe.contentDocument?.readyState === "complete") {
-            attach(iframe);
-          } else {
-            iframe.addEventListener("load", () => attach(iframe), { once: true });
-          }
+          iframe.addEventListener("load", wireScrollSync);
         }
+        wireScrollSync();
       }
 
       fetch("/versions.json")
@@ -289,22 +363,13 @@
               <iframe
                 title="${v.label} deck"
                 src="${v.path}"
-                loading="lazy"
               ></iframe>
             </div>`
             )
             .join("");
 
           const iframes = [...grid.querySelectorAll("iframe")];
-          let loaded = 0;
-          const onLoad = () => {
-            loaded += 1;
-            if (loaded >= iframes.length) setupSyncScroll(iframes);
-          };
-          for (const iframe of iframes) {
-            if (iframe.contentDocument?.readyState === "complete") onLoad();
-            else iframe.addEventListener("load", onLoad, { once: true });
-          }
+          setupSyncScroll(iframes);
         })
         .catch(() => {
           grid.innerHTML =

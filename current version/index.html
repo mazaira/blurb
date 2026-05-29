@@ -266,6 +266,33 @@
         margin-bottom: 24px;
       }
 
+      .differentiation h2 {
+        max-width: 22ch;
+      }
+
+      .differentiation .quote {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(22px, 6vw, 32px);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin-bottom: 28px;
+        max-width: none;
+        padding: 0;
+        border: none;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        max-width: 62ch;
+      }
+
+      .stack p {
+        margin-bottom: 0;
+      }
+
       p {
         font-size: clamp(15px, 3.8vw, 18px);
         line-height: 1.6;
@@ -344,16 +371,24 @@
         </div>
       </section>
 
-      <section id="differentiation">
+      <section id="differentiation" class="differentiation">
         <div class="inner">
-          <span class="eyebrow">Differentiation</span>
-          <h2>What you'd get if BVNK and Formance had a baby</h2>
-          <p>
-            Onrampers, Bridge, Noah's… their product centers on the transaction: money
-            in, money out. Depa begins at the account. Every payment settles against a
-            live treasury position on one ledger, so reconciliation, segregation,
-            nostro/vostro and counterparty risk aren't features — they're the substrate.
+          <span class="eyebrow">The difference</span>
+          <h2>How are we different from the other 120 stablecoin companies?</h2>
+          <p class="quote grad-text">
+            Depa is what you'd get if BVNK and Formance had a baby.
           </p>
+          <div class="stack">
+            <p>
+              Onrampers, Bridge, Noah's… their product centers on the transaction:
+              money in, money out.
+            </p>
+            <p>
+              <strong>Depa begins at the account.</strong> Every payment settles against
+              a live treasury position on one ledger, so reconciliation, segregation,
+              nostro/vostro and counterparty risk aren't features, they're the substrate.
+            </p>
+          </div>
         </div>
       </section>
 
