@@ -314,6 +314,48 @@
         margin-bottom: 8px;
       }
 
+      .traction .inner {
+        max-width: 900px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 8px;
+      }
+
+      .traction .metric {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .metric .num {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(26px, 7vw, 34px);
+        letter-spacing: -0.02em;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .metric .label {
+        font-size: 14px;
+        color: var(--muted-foreground);
+        line-height: 1.4;
+      }
+
+      @media (min-width: 720px) {
+        .metrics {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
       .team p {
         margin-bottom: 20px;
       }
@@ -417,18 +459,36 @@
         </div>
       </section>
 
-      <section id="traction">
+      <section id="traction" class="traction">
         <div class="inner">
           <span class="eyebrow">Traction</span>
-          <h2>[Traction headline]</h2>
-          <ul>
-            <li>Grew from $600k revenue in 2024 to $5.2M in 2025</li>
-            <li>$2M+ revenue in 2026 YTD, with customer concentration solved</li>
-            <li>Signing new contracts at 3× the 2025 pace</li>
-            <li>$750k+ ARR per employee</li>
-            <li>Processing 15k+ payments/day with a team of 13</li>
-            <li>0.02% chargeback rate</li>
-          </ul>
+          <h2>A small team, compounding fast.</h2>
+          <div class="metrics">
+            <div class="metric">
+              <span class="num">$0.6M → $5.2M</span>
+              <span class="label">Revenue growth from 2024 to 2025</span>
+            </div>
+            <div class="metric">
+              <span class="num">$2M+</span>
+              <span class="label">Revenue in 2026 YTD, with customer concentration solved</span>
+            </div>
+            <div class="metric">
+              <span class="num">x3</span>
+              <span class="label">Signing new contracts at 3× the 2025 pace</span>
+            </div>
+            <div class="metric">
+              <span class="num">$750k+</span>
+              <span class="label">ARR per employee</span>
+            </div>
+            <div class="metric">
+              <span class="num">15k+/day</span>
+              <span class="label">Payments processed with a team of 13</span>
+            </div>
+            <div class="metric">
+              <span class="num">0.02%</span>
+              <span class="label">Chargeback rate. Proving compliance excellence.</span>
+            </div>
+          </div>
         </div>
       </section>
 

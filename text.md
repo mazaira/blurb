@@ -37,6 +37,8 @@ Most infrastructure was built around transactions. The next generation of regula
 
 ## 4. Traction
 
+### A small team, compounding fast.
+
 - Grew from **$600k** revenue in 2024 to **$5.2M** in 2025
 - **$2M+** revenue in 2026 YTD, with customer concentration solved
 - Signing new contracts at **3×** the 2025 pace
