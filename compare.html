@@ -78,23 +78,6 @@
         white-space: nowrap;
       }
 
-      .toolbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-shrink: 0;
-      }
-
-      label.sync {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--muted);
-        cursor: pointer;
-        user-select: none;
-      }
-
       .grid {
         flex: 1;
         display: grid;
@@ -208,12 +191,6 @@
     <header class="toolbar">
       <a href="/">← Menu</a>
       <span class="toolbar-title">One-shot comparison — same brief, four models</span>
-      <div class="toolbar-actions">
-        <label class="sync">
-          <input type="checkbox" id="sync-scroll" checked />
-          Sync scroll
-        </label>
-      </div>
     </header>
 
     <div class="grid" id="grid">
@@ -222,125 +199,6 @@
 
     <script type="module">
       const grid = document.getElementById("grid");
-      const syncCheckbox = document.getElementById("sync-scroll");
-      let syncLock = false;
-      let syncLockTimer = 0;
-
-      /** Find the element that actually scrolls (deck vs document). */
-      function getScrollTarget(doc) {
-        const win = doc.defaultView;
-        if (!win) return null;
-
-        const docEl = doc.documentElement;
-        const deck = doc.querySelector(".deck");
-
-        if (deck) {
-          const style = win.getComputedStyle(deck);
-          const overflowY = style.overflowY;
-          const deckScrolls =
-            (overflowY === "auto" ||
-              overflowY === "scroll" ||
-              overflowY === "overlay") &&
-            deck.scrollHeight > deck.clientHeight + 2;
-
-          if (deckScrolls) {
-            return { kind: "element", el: deck, win };
-          }
-        }
-
-        return { kind: "document", el: docEl, win };
-      }
-
-      function scrollMax(target) {
-        if (target.kind === "element") {
-          return Math.max(0, target.el.scrollHeight - target.el.clientHeight);
-        }
-        return Math.max(
-          0,
-          target.el.scrollHeight - target.win.innerHeight
-        );
-      }
-
-      function scrollTop(target) {
-        if (target.kind === "element") {
-          return target.el.scrollTop;
-        }
-        return target.win.scrollY ?? target.el.scrollTop;
-      }
-
-      function setScrollTop(target, value) {
-        if (target.kind === "element") {
-          target.el.scrollTop = value;
-        } else {
-          target.win.scrollTo(0, value);
-        }
-      }
-
-      function scrollRatio(target) {
-        const max = scrollMax(target);
-        if (max <= 0) return 0;
-        return scrollTop(target) / max;
-      }
-
-      function setupSyncScroll(iframes) {
-        const targets = [];
-        let wired = false;
-
-        function wireScrollSync() {
-          if (wired) return;
-          const ready = iframes.every(
-            (f) => f.contentDocument?.readyState === "complete"
-          );
-          if (!ready) return;
-          wired = true;
-
-          for (const iframe of iframes) {
-            const doc = iframe.contentDocument;
-            if (!doc) continue;
-
-            const target = getScrollTarget(doc);
-            if (!target) continue;
-
-            targets.push(target);
-
-            const onScroll = () => {
-              if (!syncCheckbox.checked || syncLock) return;
-
-              syncLock = true;
-              clearTimeout(syncLockTimer);
-
-              const ratio = scrollRatio(target);
-              for (const other of targets) {
-                if (other === target) continue;
-                setScrollTop(other, ratio * scrollMax(other));
-              }
-
-              syncLockTimer = setTimeout(() => {
-                syncLock = false;
-              }, 80);
-            };
-
-            if (target.kind === "element") {
-              target.el.addEventListener("scroll", onScroll, { passive: true });
-            } else {
-              target.win.addEventListener("scroll", onScroll, { passive: true });
-            }
-          }
-
-          setTimeout(() => {
-            if (!syncCheckbox.checked || targets.length < 2) return;
-            const ratio = scrollRatio(targets[0]);
-            for (let i = 1; i < targets.length; i++) {
-              setScrollTop(targets[i], ratio * scrollMax(targets[i]));
-            }
-          }, 500);
-        }
-
-        for (const iframe of iframes) {
-          iframe.addEventListener("load", wireScrollSync);
-        }
-        wireScrollSync();
-      }
 
       fetch("/versions.json")
         .then((r) => r.json())
@@ -367,9 +225,6 @@
             </div>`
             )
             .join("");
-
-          const iframes = [...grid.querySelectorAll("iframe")];
-          setupSyncScroll(iframes);
         })
         .catch(() => {
           grid.innerHTML =
