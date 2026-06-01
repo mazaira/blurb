@@ -198,56 +198,16 @@
     <script type="module">
       const content = document.getElementById("content");
 
-      const renderer = {
-        heading({ depth, text }) {
-          return `<h${depth}>${text}</h${depth}>`;
-        },
-        paragraph(text) {
-          return `<p>${text}</p>`;
-        },
-        blockquote(text) {
-          return `<blockquote>${text}</blockquote>`;
-        },
-        list(body, ordered) {
-          const tag = ordered ? "ol" : "ul";
-          return `<${tag}>${body}</${tag}>`;
-        },
-        listitem(text) {
-          return `<li>${text}</li>`;
-        },
-        strong(text) {
-          return `<strong>${text}</strong>`;
-        },
-        em(text) {
-          return `<em>${text}</em>`;
-        },
-        codespan(text) {
-          return `<code>${text}</code>`;
-        },
-        hr() {
-          return "<hr />";
-        },
-        link(href, title, text) {
-          const t = title ? ` title="${title}"` : "";
-          return `<a href="${href}"${t}>${text}</a>`;
-        },
-      };
-
-      async function loadMarked() {
-        const { marked } = await import(
-          "https://cdn.jsdelivr.net/npm/marked@15.0.7/lib/marked.esm.js"
-        );
-        marked.use({ renderer, gfm: true, breaks: true });
-        return marked;
-      }
-
       fetch("/text.md")
         .then((r) => {
           if (!r.ok) throw new Error("Not found");
           return r.text();
         })
         .then(async (md) => {
-          const marked = await loadMarked();
+          const { marked } = await import(
+            "https://cdn.jsdelivr.net/npm/marked@15.0.7/lib/marked.esm.js"
+          );
+          marked.use({ gfm: true, breaks: true });
           content.innerHTML = marked.parse(md);
         })
         .catch(() => {
